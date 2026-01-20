@@ -1,0 +1,134 @@
+$primary-color: #485bff;
+$secondary-color: #2a4b87;
+$light-blue: #f0f5ff;
+$text-dark: #333333;
+$text-light: #ffffff;
+$border-color: #e6f7ff;
+
+.sidenav {
+  min-height: 100vh;
+  background: linear-gradient(180deg, $light-blue 0%, #ffffff 100%) !important;
+  border-right: 1px solid rgba($primary-color, 0.1);
+  box-shadow: 2px 0 8px rgba($primary-color, 0.05);
+
+  .sidebar_menu {
+    background: transparent;
+    border: none;
+
+    .ant-menu-item {
+      margin: 4px 8px;
+      border-radius: 8px;
+      height: 48px;
+      line-height: 48px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: rgba($primary-color, 0.1);
+        color: $primary-color;
+
+        .ant-menu-item-icon {
+          color: $primary-color;
+        }
+      }
+
+      &.ant-menu-item-selected {
+        background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+        color: $text-light;
+        font-weight: 500;
+
+        .ant-menu-item-icon {
+          color: $text-light;
+        }
+
+        &::after {
+          display: none;
+        }
+      }
+    }
+
+    .ant-menu-submenu {
+      .ant-menu-submenu-title {
+        margin: 4px 8px;
+        border-radius: 8px;
+        height: 48px;
+        line-height: 48px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: rgba($primary-color, 0.1);
+          color: $primary-color;
+
+          .ant-menu-submenu-arrow {
+            color: $primary-color;
+          }
+        }
+      }
+
+      &.ant-menu-submenu-selected {
+        .ant-menu-submenu-title {
+          color: $primary-color;
+          font-weight: 500;
+
+          .ant-menu-submenu-arrow {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+
+  .profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+    width: 100%;
+    padding: 0 16px;
+    border-bottom: 1px solid $border-color;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+
+    .sidebar-logo {
+      width: 120px;
+      height: auto;
+      transition: all 0.3s ease;
+      object-fit: contain;
+    }
+
+    &.collapsed {
+      padding: 0 8px;
+
+      .sidebar-logo {
+        width: 40px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    position: fixed !important;
+    z-index: 1000;
+    height: 100vh;
+
+    .profile-container {
+      height: 80px;
+
+      .sidebar-logo {
+        width: 80px;
+      }
+
+      &.collapsed .sidebar-logo {
+        width: 30px;
+      }
+    }
+  }
+}
+
+.ant-layout-sider-trigger {
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%) !important;
+  color: $text-light !important;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: linear-gradient(135deg, $secondary-color 0%, $primary-color 100%) !important;
+  }
+}

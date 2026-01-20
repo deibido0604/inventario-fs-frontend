@@ -1,0 +1,320 @@
+@use "sass:color";
+
+// ===========================================
+// VARIABLES DE COLORES (basadas en tu paleta)
+// ===========================================
+$primary-blue: #485bff;
+$secondary-blue: #2a4b87;
+$light-blue: #d0e7ff;
+$success-green: #59c100;
+$error-red: #f5222d;
+$warning-orange: #f2aa52;
+$dark-text: #000000;
+$light-bg: #f2aa5211;
+$white: #ffffff;
+
+// ===========================================
+// RESET Y ESTILOS GLOBALES
+// ===========================================
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+// ===========================================
+// NAVBAR
+// ===========================================
+.navbar_custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.adjusted-icon {
+  padding: 4px;
+}
+
+.button-icon {
+  padding: auto;
+}
+
+// ===========================================
+// PAGE HEADER Y BOTONES
+// ===========================================
+.page-title-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-button-add {
+  height: 36px;
+  padding: 9px 8px 8px 9px;
+  border-radius: 4px;
+  background-color: $primary-blue;
+  color: $white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: color.adjust($primary-blue, $lightness: -10%);
+  }
+}
+
+.page-select {
+  display: flex;
+  width: 263px;
+}
+
+.page-button-add-classification {
+  background-color: $success-green !important;
+  color: $white !important;
+
+  &:hover {
+    background-color: color.adjust($success-green, $lightness: -10%) !important;
+  }
+}
+
+.page-button-print {
+  width: 104px;
+  height: 36px;
+  padding: 9px 8px 8px 9px;
+  border-radius: 4px;
+  background-color: $secondary-blue;
+  color: $white;
+}
+
+// ===========================================
+// TABLES
+// ===========================================
+.table-button-edit {
+  color: $dark-text;
+  background: transparent;
+  border: 1px solid $primary-blue;
+
+  &:hover {
+    background-color: rgba($primary-blue, 0.1);
+  }
+}
+
+.table-button-delete {
+  color: $error-red;
+  background: transparent;
+  border: none;
+
+  &:hover {
+    color: color.adjust($error-red, $lightness: -10%);
+  }
+}
+
+.custom-table-header .ant-table-thead>tr>th {
+  background-color: $light-blue !important;
+  font-weight: 600;
+}
+
+// ===========================================
+// FORMULARIOS
+// ===========================================
+.footer-form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.file-container {
+  position: relative;
+  height: 66px;
+  padding: 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// ===========================================
+// BOTONES ESPECIALES
+// ===========================================
+.button-product {
+  height: 60px;
+  font-size: 24px;
+  padding: 9px 8px 8px 9px;
+  border-radius: 4px;
+  border: 2px solid $primary-blue;
+  color: $primary-blue;
+  background: transparent;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: rgba($primary-blue, 0.1);
+    border-color: color.adjust($primary-blue, $lightness: -10%);
+    color: color.adjust($primary-blue, $lightness: -10%);
+  }
+}
+
+// ===========================================
+// SELECTS
+// ===========================================
+.small-select .ant-select-selector {
+  font-size: 11px;
+}
+
+.small-select .ant-select-selection-item {
+  line-height: 24px;
+}
+
+.small-select .ant-select-item {
+  font-size: 8px;
+}
+
+.select-error .ant-select-selector {
+  border-color: $error-red !important;
+}
+
+.select-error:focus-within .ant-select-selector {
+  box-shadow: 0 0 0 2px rgba($error-red, 0.08) !important;
+}
+
+// ===========================================
+// COLORS PARA TABLAS
+// ===========================================
+.color-1 {
+  background-color: $light-bg;
+}
+
+.color-2 {
+  background-color: rgba($white, 0.7);
+}
+
+// ===========================================
+// MARGINS Y PADDINGS
+// ===========================================
+.mb-5 {
+  margin-bottom: 5px !important;
+}
+
+.mb-10 {
+  margin-bottom: 10px !important;
+}
+
+.mb-15 {
+  margin-bottom: 15px !important;
+}
+
+.mb-20 {
+  margin-bottom: 20px !important;
+}
+
+.mt-5 {
+  margin-top: 5px !important;
+}
+
+.mt-10 {
+  margin-top: 10px !important;
+}
+
+.mt-15 {
+  margin-top: 15px !important;
+}
+
+.mt-20 {
+  margin-top: 20px !important;
+}
+
+// ===========================================
+// ICONOS
+// ===========================================
+.bold_icon {
+  svg {
+    font-weight: bold;
+    stroke-width: 30;
+    stroke: $dark-text;
+    color: $dark-text;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+// ===========================================
+// MAPA
+// ===========================================
+.map-container {
+  height: 500px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+// ===========================================
+// ESTILOS LOGIN (AISLADOS)
+// ===========================================
+.login-wrapper {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden !important;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .wraper {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg,
+        color.adjust($secondary-blue, $lightness: 10%) 0%,
+        $white 100%);
+  }
+
+  .login-container {
+    background: $white;
+    width: 90%;
+    max-width: 1200px;
+    height: 90%;
+    max-height: 700px;
+    display: flex;
+    border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 40px 4px;
+    overflow: hidden;
+  }
+}
+
+// ===========================================
+// RESPONSIVE
+// ===========================================
+@media (max-width: 768px) {
+  .page-title-button {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .page-select {
+    width: 100%;
+  }
+
+  .login-container {
+    flex-direction: column !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+  }
+}
