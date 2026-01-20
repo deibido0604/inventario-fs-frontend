@@ -37,4 +37,5 @@ export default defineConfig({
     outDir: "dist",
     sourcemap: false,
   },
+  base: '/'
 });
