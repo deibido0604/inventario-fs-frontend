@@ -80,7 +80,8 @@ const AuthProvider = ({ children }) => {
             navigate("/auth/login", { replace: true });
           }
         }
-      } catch () {
+      } catch (error) {
+        console.error("💥 Error crítico en initAuth:", error);
         clearStorage();
 
         const currentPath = window.location.pathname;
