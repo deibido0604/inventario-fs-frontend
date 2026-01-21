@@ -1,13 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch } from "react-redux";
 import { setLogged } from "../../config/store";
-import { useApi, useLocalStorage } from "../../hooks";
-import { endpoints } from "../../utils";
+import { useApi, useLocalStorage } from "@hooks";
+import { endpoints } from "@utils";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AbilityBuilder } from "@casl/ability";
 import { AbilityContext } from "./AbilityContext";
 import { openNotification } from "../layout/store/layoutSlice";
 import { persistor, resetStore } from "../../store/store";
+import LoadingPage from "../components/Loader/LoadingPage";
 
 const defaultProvider = {
   user: null,
@@ -28,48 +30,84 @@ const AuthProvider = ({ children }) => {
     useLocalStorage();
   const navigate = useNavigate();
 
+  // STATES
   const [user, setUser] = useState(defaultProvider.user);
+  const [initializing, setInitializing] = useState(true);
 
   /* ================= INIT AUTH ================= */
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const data = getItemWithDecryption("data");
-        if (!data) throw new Error("No data in localStorage");
+        const storedUser = getItemWithDecryption("data");
 
-        const parsed = JSON.parse(data);
+        let userData = storedUser;
+        if (typeof storedUser === "string") {
+          try {
+            userData = JSON.parse(storedUser);
+          } catch (parseError) {
+            console.error("❌ Error parseando string:", parseError);
+            throw new Error("Datos corruptos");
+          }
+        }
 
-        if (parsed?.user?.id) {
-          setUser(parsed);
+        if (userData && userData.user && userData.user.id) {
+          if (!userData.role && userData.roles) {
+            const role = setUserRoles(userData.roles);
+            userData.role = role;
+            setItemWithEncryption("data", userData);
+          }
+
+          setUser(userData);
           dispatch(setLogged(true));
 
-          const role = parsed.role || { permissions: [] };
+          const role = userData.role || { permissions: [] };
+          handleUpdateAbility({ permissions: role.permissions || [] });
 
-          handlePermissions({
-            permissions: role.permissions,
-            goToMain: true,
-            route: "/main/dashboard",
-          });
+          const currentPath = window.location.pathname;
+
+          if (
+            !currentPath.startsWith("/main") &&
+            !currentPath.includes("/auth/login") &&
+            !currentPath.includes("/auth/register")
+          ) {
+            navigate("/main", { replace: true });
+          }
         } else {
-          navigate("/auth/login");
+          const publicPaths = ["/auth/login", "/auth/register"];
+          const currentPath = window.location.pathname;
+
+          if (!publicPaths.includes(currentPath)) {
+            navigate("/auth/login", { replace: true });
+          }
         }
-      } catch (error) {
+      } catch () {
         clearStorage();
-        navigate("/auth/login");
+
+        const currentPath = window.location.pathname;
+        if (!currentPath.includes("/auth/")) {
+          navigate("/auth/login", { replace: true });
+        }
+      } finally {
+        setInitializing(false);
       }
     };
 
-    initAuth();
+    // Pequeño delay
+    setTimeout(() => {
+      initAuth();
+    }, 100);
   }, []);
 
   /* ================= ABILITY ================= */
   const handleUpdateAbility = ({ permissions = [] }) => {
     const { can, rules } = new AbilityBuilder(ability);
-
-    permissions.forEach((permission) => {
-      can(permission.action, permission.subject);
-    });
-
+    if (permissions && Array.isArray(permissions)) {
+      permissions.forEach((permission) => {
+        if (permission.action && permission.subject) {
+          can(permission.action, permission.subject);
+        }
+      });
+    }
     ability.update(rules);
   };
 
@@ -79,14 +117,7 @@ const AuthProvider = ({ children }) => {
   const clearStorage = () => {
     setUser(null);
     removeItem("data");
-  };
-
-  const handlePermissions = ({ permissions = [], route, goToMain = false }) => {
-    handleUpdateAbility({ permissions });
-
-    if (goToMain) {
-      navigate(route || "/main", { replace: true });
-    }
+    dispatch(setLogged(false));
   };
 
   const setUserRoles = (roles = []) => {
@@ -94,16 +125,20 @@ const AuthProvider = ({ children }) => {
     let type = "";
     let permissions = [];
 
-    roles.forEach((role) => {
-      type += (type ? "-" : "") + role.type;
-      name += (name ? "-" : "") + role.name;
-      permissions = permissions.concat(role.permissions || []);
-    });
+    if (Array.isArray(roles)) {
+      roles.forEach((role) => {
+        type += (type ? "-" : "") + (role.type || "");
+        name += (name ? "-" : "") + (role.name || "");
+        permissions = permissions.concat(role.permissions || []);
+      });
+    }
 
+    // Eliminar duplicados
     const seenIds = new Set();
-    permissions = permissions.filter((p) => {
-      if (seenIds.has(p._id)) return false;
-      seenIds.add(p._id);
+    permissions = permissions.filter((permission) => {
+      if (!permission || !permission._id) return false;
+      if (seenIds.has(permission._id)) return false;
+      seenIds.add(permission._id);
       return true;
     });
 
@@ -111,42 +146,66 @@ const AuthProvider = ({ children }) => {
   };
 
   /* ================= LOGIN ================= */
-  const handleLogin = (userCredentials) => {
+  const handleLogin = (credentials) => {
     axios
       .callService({ url: endpoints.authUrl.login })
-      .post(userCredentials)
+      .post(credentials)
       .then((resp) => {
-        const { data } = resp;
+        let { data } = resp;
 
         if (data) {
-          const role = setUserRoles(data.roles);
-          data.role = role;
-          handleSetUser(data);
-          setItemWithEncryption("data", JSON.stringify(data));
+          if (data.active === true) {
+            const role = setUserRoles(data.roles || []);
 
-          const options = {
-            rolename: role.type,
-            goToMain: true,
-            permissions: role.permissions,
-            route: "/main",
-          };
+            const userData = {
+              user: {
+                id: data._id,
+                username: data.username,
+                email: data.email,
+                name: data.name,
+                lastName: data.lastName,
+                department: data.department,
+                active: data.active,
+                lastLogin: data.lastLogin,
+                createdAt: data.createdAt,
+                updatedAt: data.updatedAt,
+              },
+              token: data.token,
+              role: role,
+              permissions: data.permissions || [],
+            };
 
-          handlePermissions(options);
-          dispatch(setLogged(true));
+            setItemWithEncryption("data", userData);
+
+            handleSetUser(userData);
+            dispatch(setLogged(true));
+            handleUpdateAbility({ permissions: role.permissions || [] });
+
+            navigate("/main", { replace: true });
+          } else {
+            dispatch(
+              openNotification({
+                message: "Atención",
+                description: "Usuario inactivo",
+                placement: "bottom",
+                type: "error",
+                show: true,
+              }),
+            );
+          }
         } else {
           dispatch(
             openNotification({
               message: "Atención",
-              description: resp.error || "Usuario inactivo",
+              description: resp.error || "Error en credenciales",
               placement: "bottom",
               type: "error",
               show: true,
             }),
           );
-          navigate("/auth/login");
         }
       })
-      .catch((err) => {
+      .catch(() => {
         dispatch(
           openNotification({
             message: "Atención",
@@ -158,14 +217,26 @@ const AuthProvider = ({ children }) => {
         );
       });
   };
-
   /* ================= LOGOUT ================= */
   const handleLogout = () => {
-    persistor.purge();
-    dispatch(setLogged(false));
-    dispatch(resetStore());
-    clearStorage();
-    navigate("/auth/login");
+    axios
+      .callService({ url: endpoints.authUrl.logout })
+      .post()
+      .then(async ({ data }) => {
+        if (data) {
+          console.log("✅ Logout exitoso en servidor");
+        }
+      })
+      .catch((error) => {
+        console.error("⚠️ Error en logout del servidor:", error);
+      })
+      .finally(() => {
+        persistor.purge();
+        dispatch(setLogged(false));
+        dispatch(resetStore());
+        clearStorage();
+        navigate("/auth/login", { replace: true });
+      });
   };
 
   const values = {
@@ -173,6 +244,10 @@ const AuthProvider = ({ children }) => {
     login: handleLogin,
     logout: handleLogout,
   };
+
+  if (initializing) {
+    return <LoadingPage />;
+  }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

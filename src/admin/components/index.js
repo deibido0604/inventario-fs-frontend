@@ -6,3 +6,4 @@ export { default as Can } from './Permissions/Can';
 export * from './Card/Card';
 export * from './Notification';
 export * from './CardContent';
+export * from './PageTitle/PageTitle';

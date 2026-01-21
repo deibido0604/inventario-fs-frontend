@@ -1,95 +1,88 @@
-import { useCallback, useState, useEffect } from 'react';
-import crypto from '../utils/crypto';
+import { crypto } from "../utils";
 
-const useLocalStorage = () => {
-  const [storage, setStorage] = useState({});
+export default function useLocalStorage() {
+  const removeItem = (key) => window.localStorage.removeItem(key);
 
-  useEffect(() => {
-    const syncStorage = () => {
-      const newStorage = {};
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        newStorage[key] = localStorage.getItem(key);
-      }
-      setStorage(newStorage);
-    };
-
-    syncStorage();
-    window.addEventListener('storage', syncStorage);
-    return () => window.removeEventListener('storage', syncStorage);
-  }, []);
-
-  const removeItem = useCallback((key) => {
-    localStorage.removeItem(key);
-    setStorage(prev => {
-      const newStorage = { ...prev };
-      delete newStorage[key];
-      return newStorage;
-    });
-  }, []);
-
-  const setItemWithEncryption = useCallback((key, value) => {
-    const encryptedValue = crypto.encryptString(
-      value, 
-      import.meta.env.VITE_APP_SECRET_KEY
-    );
-    localStorage.setItem(key, encryptedValue);
-    setStorage(prev => ({ ...prev, [key]: encryptedValue }));
-  }, []);
-
-  const getItemWithDecryption = useCallback((key) => {
-    const encryptedValue = localStorage.getItem(key);
-    if (!encryptedValue) return null;
-
+  const setItemWithEncryption = (key, value) => {
     try {
-      const decryptedValue = crypto.decryptString(
-        encryptedValue, 
-        import.meta.env.VITE_APP_SECRET_KEY
-      );
-      
+      const stringValue =
+        typeof value === "string" ? value : JSON.stringify(value);
+
+      const secret =
+        import.meta.env.REACT_APP_SECRET || "default-secret-for-dev";
+
+      const encryptedValue = crypto.encryptString(stringValue, secret);
+
+      localStorage.setItem(key, encryptedValue);
+    } catch (error) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  };
+
+  const getItemWithDecryption = (key) => {
+    try {
+      const encryptedValue = localStorage.getItem(key);
+      if (!encryptedValue) return null;
+    } catch (error) {
+
+      try {
+        const rawValue = localStorage.getItem(key);
+        return JSON.parse(rawValue);
+      } catch {
+        return null;
+      }
+    }
+  };
+
+  const getItemWithDecryptionDash = (key) => {
+    try {
+      const encryptedValue = localStorage.getItem(key);
+      if (!encryptedValue) return null;
+
+      const isEncrypted =
+        encryptedValue.includes(":") || encryptedValue.length > 100;
+
+      let decryptedValue;
+      if (isEncrypted) {
+        const secret =
+          import.meta.env.REACT_APP_SECRET || "default-secret-for-dev";
+        decryptedValue = crypto.decryptString(encryptedValue, secret);
+      } else {
+        decryptedValue = encryptedValue;
+      }
+
       try {
         return JSON.parse(decryptedValue);
-      } catch {
+      } catch (parseError) {
         return decryptedValue;
       }
     } catch (error) {
-      console.error('Error decrypting:', error);
-      return null;
+
+      try {
+        const rawValue = localStorage.getItem(key);
+        return JSON.parse(rawValue);
+      } catch {
+        return null;
+      }
     }
-  }, []);
+  };
 
-  const setItem = useCallback((key, value) => {
-    const stringValue = typeof value === 'object' ? JSON.stringify(value) : value;
-    localStorage.setItem(key, stringValue);
-    setStorage(prev => ({ ...prev, [key]: stringValue }));
-  }, []);
+  const setItem = (key, value) => {
+    localStorage.setItem(key, value);
+  };
 
-  const getItem = useCallback((key) => {
+  const getItem = (key) => {
     const value = localStorage.getItem(key);
     if (!value) return null;
-    
-    try {
-      return JSON.parse(value);
-    } catch {
-      return value;
-    }
-  }, []);
-
-  const clear = useCallback(() => {
-    localStorage.clear();
-    setStorage({});
-  }, []);
+    return value;
+  };
 
   return {
-    storage,
     removeItem,
     getItem,
     setItem,
     setItemWithEncryption,
     getItemWithDecryption,
-    clear,
-    getAllItems: () => storage
+    getItemWithDecryptionDash,
   };
-};
-
-export default useLocalStorage;
+}

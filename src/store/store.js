@@ -1,29 +1,25 @@
-import { combineReducers } from 'redux';
-import { persistReducer, persistStore } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers } from "redux";
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { configureStore } from "@reduxjs/toolkit";
 
-import { configSlice } from '../config/store/configSlice';
-import { layoutSlice } from '../admin/layout/store/layoutSlice';
-  // import { productSlice } from '../admin/modules/products/store/productSlice';
+import { configSlice } from "../config/store/configSlice";
+import { layoutSlice } from "../admin/layout/store/layoutSlice";
+import { productSlice } from "../admin/modules/products/store/productSlice";
 
 const rootReducer = combineReducers({
   config: configSlice.reducer,
   layout: layoutSlice.reducer,
-  // products: productSlice.reducer,
+  products: productSlice.reducer,
 });
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   storage,
-  whitelist: [
-    'config',
-    'layout',
-    // 'products',
-  ],
+  whitelist: ["config", "layout", "products"],
 };
 
-export const RESET_STORE = 'RESET_STORE';
+export const RESET_STORE = "RESET_STORE";
 
 export const resetStore = () => ({
   type: RESET_STORE,

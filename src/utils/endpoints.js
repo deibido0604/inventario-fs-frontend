@@ -1,6 +1,6 @@
 // import { constants } from '@utils';
 
-const API_URL =  "https://inventario-fs-backend.vercel.app/api-inventario-fs";
+const API_URL = "https://inventario-fs-backend.vercel.app/api-inventario-fs";
 // const API_URL =  "http://localhost:3000/api-inventario-fs";
 
 export const authUrl = {
@@ -24,3 +24,10 @@ export const permissionUrl = {
   update: `${API_URL}/permission/update`,
 };
 
+export const productsUrl = {
+  byId: `${API_URL}/products`,
+  list: `${API_URL}/products/list`,
+  create: `${API_URL}/products/create`,
+  update: `${API_URL}/products/update`,
+  delete: `${API_URL}/products/delete`,
+};

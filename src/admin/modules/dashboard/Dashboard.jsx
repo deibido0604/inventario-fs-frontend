@@ -6,61 +6,102 @@ import { useState } from "react";
 
 const Dashboard = () => {
   const { t } = useTranslate();
-  const { getItemWithDecryption } = useLocalStorage();
+  const { getItemWithDecryptionDash } = useLocalStorage();
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    return now.toLocaleString("es-HN", {
-      weekday: 'long',
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    try {
+      const formattedDate = now.toLocaleString("es-HN", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "America/Tegucigalpa",
+      });
+      return formattedDate;
+    } catch (error) {
+      return now.toISOString();
+    }
   };
 
   const [user, setUser] = useState({
-    name: "David Torres",
     loginDate: getCurrentDateTime(),
   });
 
   const getDecryptedData = () => {
     try {
-      const encryptedData = getItemWithDecryption('data');
-      
-      if (encryptedData) {
-        const data = JSON.parse(encryptedData);
-        
-        if (data && data.user) {
-          setUser({
-            name: data.user.name || data.user.username || "Usuario",
-            loginDate: data.user.lastLogin || getCurrentDateTime(),
-          });
-        } else {
-          setUser({
-            name: "David Torres",
-            loginDate: getCurrentDateTime(),
-          });
-        }
-      } else {
+      const storedData = getItemWithDecryptionDash("data");
+      if (!storedData) {
         setUser({
-          name: "David Torres",
+          name: " ",
           loginDate: getCurrentDateTime(),
         });
+        return;
       }
+
+      let userData;
+
+      if (storedData.user && storedData.user.id) {
+        userData = storedData;
+      } else if (storedData._id && storedData.username) {
+        userData = {
+          user: {
+            id: storedData._id,
+            username: storedData.username,
+            name: storedData.name,
+            lastName: storedData.lastName,
+            email: storedData.email,
+            lastLogin: storedData.lastLogin,
+            active: storedData.active,
+            department: storedData.department,
+          },
+        };
+      } else {
+        setUser({
+          name: " ",
+          loginDate: getCurrentDateTime(),
+        });
+        return;
+      }
+
+      let loginDate = getCurrentDateTime();
+      if (userData.user.lastLogin) {
+        try {
+          const lastLoginDate = new Date(userData.user.lastLogin);
+          loginDate = lastLoginDate.toLocaleString("es-HN", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        } catch (dateError) {}
+      }
+
+      const newUserData = {
+        name: userData.user.name || userData.user.username || "Usuario",
+        loginDate: loginDate,
+        rawData: userData,
+      };
+
+      setUser(newUserData);
     } catch (err) {
-      console.error("Error al leer datos del usuario:", err);
       setUser({
-        name: "David Torres",
+        name: " ",
         loginDate: getCurrentDateTime(),
       });
     }
   };
-
   useMountEffect({
     effect: () => {
       getDecryptedData();
+
+      setTimeout(() => {
+        const rawLocalStorage = localStorage.getItem("data");
+      }, 500);
     },
     deps: [],
   });
@@ -68,10 +109,13 @@ const Dashboard = () => {
   return (
     <CardContent className="card-content-dashboard">
       <div className="welcome-container">
-        <img 
-          src="/img/brand_icon_halftone-03.png" 
-          alt="Brand Icon" 
+        <img
+          src="/img/brand_icon_halftone-03.png"
+          alt="Brand Icon"
           className="dashboard-logo"
+          onError={(e) => {
+            e.target.style.display = "none";
+          }}
         />
         <div className="session-info">
           <h1 className="welcome-message">
