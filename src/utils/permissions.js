@@ -9,4 +9,5 @@ export const Subjects = {
   MAIN: "main",
   DASHBOARD: "dashboard",
   PRODUCTS: "products",
+  BRANCH: "branch",
 };

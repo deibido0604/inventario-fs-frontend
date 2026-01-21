@@ -6,17 +6,19 @@ import { configureStore } from "@reduxjs/toolkit";
 import { configSlice } from "../config/store/configSlice";
 import { layoutSlice } from "../admin/layout/store/layoutSlice";
 import { productSlice } from "../admin/modules/products/store/productSlice";
+import { branchSlice } from "../admin/modules/branch/store";
 
 const rootReducer = combineReducers({
   config: configSlice.reducer,
   layout: layoutSlice.reducer,
   products: productSlice.reducer,
+  branch: branchSlice.reducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["config", "layout", "products"],
+  whitelist: ["config", "layout", "products", "branch"],
 };
 
 export const RESET_STORE = "RESET_STORE";

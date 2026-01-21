@@ -3,7 +3,8 @@
   "app.role": "Rols",
   "app.users": "Users",
   "app.dashboard": "Dashboard",
-  "app.products": "Manage products",
+  "app.products": "Products",
+  "app.branch": "Branch",
 
   "dashboard.welcome": "Welcome to Farsiman Inventory System",
   "dashboard.hello": "Hello",

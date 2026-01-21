@@ -31,3 +31,12 @@ export const productsUrl = {
   update: `${API_URL}/products/update`,
   delete: `${API_URL}/products/delete`,
 };
+
+export const branchUrl = {
+  byId: `${API_URL}/branchs`,
+  list: `${API_URL}/branchs/list`,
+  create: `${API_URL}/branchs/create`,
+  update: `${API_URL}/branchs/update`,
+  delete: `${API_URL}/branchs/delete`,
+};
+

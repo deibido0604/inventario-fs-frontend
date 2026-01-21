@@ -3,9 +3,10 @@
   "app.role": "Roles",
   "app.users": "Usuarios",
   "app.dashboard": "Dashboard",
-  "app.products": "Administrar productos",
+  "app.products": "Productos",
+  "app.branch": "Sucursales",
 
   "dashboard.hello": "Hola",
-  "dashboard.welcome": "Bienvenido/a al Sistema de Inevntario de Farsiman",
+  "dashboard.welcome": "Bienvenido/a al Sistema de Inventario de Farsiman",
   "dashboard.time": "Tu hora de ingreso es:"
 }
