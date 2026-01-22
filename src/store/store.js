@@ -7,18 +7,20 @@ import { configSlice } from "../config/store/configSlice";
 import { layoutSlice } from "../admin/layout/store/layoutSlice";
 import { productSlice } from "../admin/modules/products/store/productSlice";
 import { branchSlice } from "../admin/modules/branch/store";
+import { outboundSlice } from "../admin/modules/outbound/store";
 
 const rootReducer = combineReducers({
   config: configSlice.reducer,
   layout: layoutSlice.reducer,
   products: productSlice.reducer,
   branch: branchSlice.reducer,
+  outbound: outboundSlice.reducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["config", "layout", "products", "branch"],
+  whitelist: ["config", "layout", "products", "branch", "outbound"],
 };
 
 export const RESET_STORE = "RESET_STORE";

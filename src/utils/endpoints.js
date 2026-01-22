@@ -41,3 +41,14 @@ export const branchUrl = {
   listForUser: `${API_URL}/branchs/user-destinations`,
 };
 
+export const outboundUrl = {
+  availableProductList: `${API_URL}/outbounds/available-products`,
+  checkAvailability: `${API_URL}/outbounds/check-availability`,
+  checkBranchLimit: `${API_URL}/outbounds/check-limit`,
+  createOutbound: `${API_URL}/outbounds/create`,
+  listOutbounds: `${API_URL}/outbounds/list`,
+  receiveOutbound: `${API_URL}/outbounds/receive`,
+  getOutboundDetails: `${API_URL}/outbounds`,
+  cancelOutbound: `${API_URL}/outbounds/cancel`,
+  getOutboundStats: `${API_URL}/outbounds/stats`,
+};
