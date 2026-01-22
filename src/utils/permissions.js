@@ -10,4 +10,5 @@ export const Subjects = {
   DASHBOARD: "dashboard",
   PRODUCTS: "products",
   BRANCH: "branch",
+  OUTBOUND: "outbound"
 };

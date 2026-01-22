@@ -5,8 +5,16 @@
   "app.dashboard": "Dashboard",
   "app.products": "Products",
   "app.branch": "Branch",
+  "app.outbound": "Outbound",
+  "app.add_outbound": "Check Out",
 
   "dashboard.welcome": "Welcome to Farsiman Inventory System",
   "dashboard.hello": "Hello",
-  "dashboard.time": "Your entry time is:"
+  "dashboard.time": "Your entry time is:",
+
+  "button.add": "Add",
+
+  "title.branch_origen":"Origin branch"
+
+
 }

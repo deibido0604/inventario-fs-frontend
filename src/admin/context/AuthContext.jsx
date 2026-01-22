@@ -172,6 +172,7 @@ const AuthProvider = ({ children }) => {
                 updatedAt: data.updatedAt,
               },
               token: data.token,
+              branch: data.branch,
               role: role,
               permissions: data.permissions || [],
             };

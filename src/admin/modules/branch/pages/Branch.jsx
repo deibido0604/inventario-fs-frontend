@@ -4,6 +4,7 @@ import { PageTitle, Card } from "@components";
 import { useDispatch, useSelector } from "react-redux";
 import { branchListAction, clearBranch } from "../store";
 import { BranchTable } from "../components/BranchTable";
+
 const Branch = () => {
   const { t } = useTranslate();
   const dispatch = useDispatch();

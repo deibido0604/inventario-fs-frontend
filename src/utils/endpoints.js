@@ -38,5 +38,6 @@ export const branchUrl = {
   create: `${API_URL}/branchs/create`,
   update: `${API_URL}/branchs/update`,
   delete: `${API_URL}/branchs/delete`,
+  listForUser: `${API_URL}/branchs/user-destinations`,
 };
 

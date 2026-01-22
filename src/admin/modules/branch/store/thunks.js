@@ -14,3 +14,13 @@ export const branchListAction = createAsyncThunk(
     }).get();
   },
 );
+
+export const branchListForUserAction = createAsyncThunk(
+  "branchForUser/list",
+  async (params, { rejectWithValue }) => {
+    return await callService({
+      url: `${endpoints.branchUrl.listForUser}?userId=${params.userId}`,
+      errorCallback: rejectWithValue,
+    }).get();
+  },
+);
