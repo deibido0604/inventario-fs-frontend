@@ -7,6 +7,7 @@
   "app.branch": "Sucursales",
   "app.outbound": "Salidas",
   "app.add_outbound": "Registrar Salida",
+  "app.outbound_list": "Lista de Salidas",
 
   "dashboard.hello": "Hola",
   "dashboard.welcome": "Bienvenido/a al Sistema de Inventario de Farsiman",

@@ -31,10 +31,11 @@ export const checkProductAvailabilityAction = createAsyncThunk(
 export const checkBranchLimitAction = createAsyncThunk(
   "outbound/checkBranchLimit",
   async (params, { rejectWithValue }) => {
+    const { branchId } = params;
     return await callService({
-      url: endpoints.outboundUrl.checkBranchLimit,
+      url: `${endpoints.outboundUrl.checkBranchLimit}/${branchId}`,
       errorCallback: rejectWithValue,
-    }).get({ params });
+    }).get();
   },
 );
 
@@ -64,10 +65,11 @@ export const listOutboundsAction = createAsyncThunk(
 export const receiveOutboundAction = createAsyncThunk(
   "outbound/receive",
   async (params, { rejectWithValue }) => {
+    const { id, ...rest } = params;
     return await callService({
-      url: endpoints.outboundUrl.receiveOutbound,
+      url: `${endpoints.outboundUrl.receiveOutbound}/${id}`,
       errorCallback: rejectWithValue,
-    }).post(params);
+    }).post(rest);
   },
 );
 
@@ -75,9 +77,33 @@ export const receiveOutboundAction = createAsyncThunk(
 export const getOutboundDetailsAction = createAsyncThunk(
   "outbound/details",
   async (params, { rejectWithValue }) => {
+    const { id, ...rest } = params;
     return await callService({
-      url: endpoints.outboundUrl.getOutboundDetails,
+      url: `${endpoints.outboundUrl.getOutboundDetails}/${id}`,
+      errorCallback: rejectWithValue,
+    }).get({ params: rest });
+  },
+);
+
+// Obtener estadísticas de salidas
+export const getOutboundStatsAction = createAsyncThunk(
+  "outbound/stats",
+  async (params, { rejectWithValue }) => {
+    return await callService({
+      url: endpoints.outboundUrl.getOutboundStats,
       errorCallback: rejectWithValue,
     }).get({ params });
+  },
+);
+
+// Cancelar salida
+export const cancelOutboundAction = createAsyncThunk(
+  "outbound/cancel",
+  async (params, { rejectWithValue }) => {
+    const { id, ...rest } = params;
+    return await callService({
+      url: `${endpoints.outboundUrl.cancelOutbound}/${id}`,
+      errorCallback: rejectWithValue,
+    }).post(rest);
   },
 );

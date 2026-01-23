@@ -36,4 +36,11 @@ export const sideBarMenu = ({ t }) => [
     subject: permissions.Subjects.OUTBOUND,
     action: permissions.Actions.READ,
   },
+  {
+    key: "outbound-list",
+    icon: <TruckOutlined />,
+    label: <Link to="/main/outbound-list"> {t("app.outbound_list")} </Link>,
+    subject: permissions.Subjects.OUTBOUND_LIST,
+    action: permissions.Actions.READ,
+  },
 ];
