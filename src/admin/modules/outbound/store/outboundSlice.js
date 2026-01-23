@@ -13,43 +13,33 @@ import {
 } from "./thunks";
 
 const initialState = {
-  // Productos disponibles
   isLoading: false,
   availableProductList: [],
 
-  // Verificación de disponibilidad
   availabilityResult: null,
   availabilityLoading: false,
 
-  // Límite de sucursal
   limitCheck: null,
   limitLoading: false,
 
-  // Creación de salida
   creatingOutbound: false,
   outboundCreated: null,
 
-  // Listado de salidas
   outboundsList: [],
   outboundsLoading: false,
 
-  // Recepción de salida
   receivingOutbound: false,
   outboundReceived: null,
 
-  // Detalles de salida
   outboundDetails: null,
   detailsLoading: false,
 
-  // Estadísticas
   stats: null,
   statsLoading: false,
 
-  // Cancelación
   cancellingOutbound: false,
   outboundCancelled: null,
 
-  // Filtros y paginación
   filters: {},
   page: 0,
   totalPages: 0,
@@ -93,7 +83,6 @@ export const outboundSlice = createSlice({
     resetOutboundState: () => initialState,
   },
   extraReducers: (builder) => {
-    // PRODUCTOS DISPONIBLES
     builder.addCase(availableProductListAction.pending, (state) => {
       state.isLoading = true;
     });
@@ -109,7 +98,6 @@ export const outboundSlice = createSlice({
       },
     );
 
-    // VERIFICAR DISPONIBILIDAD
     builder.addCase(checkProductAvailabilityAction.pending, (state) => {
       state.availabilityLoading = true;
       state.availabilityResult = null;
@@ -126,7 +114,6 @@ export const outboundSlice = createSlice({
       },
     );
 
-    // VERIFICAR LÍMITE DE SUCURSAL
     builder.addCase(checkBranchLimitAction.pending, (state) => {
       state.limitLoading = true;
       state.limitCheck = null;
@@ -140,7 +127,6 @@ export const outboundSlice = createSlice({
       state.limitCheck = payload.data;
     });
 
-    // CREAR SALIDA
     builder.addCase(createOutboundAction.pending, (state) => {
       state.creatingOutbound = true;
       state.outboundCreated = null;
@@ -151,12 +137,10 @@ export const outboundSlice = createSlice({
     builder.addCase(createOutboundAction.fulfilled, (state, { payload }) => {
       state.creatingOutbound = false;
       state.outboundCreated = payload.data;
-      // Limpiar datos temporales después de crear
       state.availabilityResult = null;
       state.limitCheck = null;
     });
 
-    // LISTAR SALIDAS
     builder.addCase(listOutboundsAction.pending, (state) => {
       state.outboundsLoading = true;
     });
@@ -171,7 +155,6 @@ export const outboundSlice = createSlice({
       state.totalItems = payload.total || payload.data?.length || 0;
     });
 
-    // RECIBIR SALIDA
     builder.addCase(receiveOutboundAction.pending, (state) => {
       state.receivingOutbound = true;
       state.outboundReceived = null;
@@ -182,7 +165,6 @@ export const outboundSlice = createSlice({
     builder.addCase(receiveOutboundAction.fulfilled, (state, { payload }) => {
       state.receivingOutbound = false;
       state.outboundReceived = payload.data;
-      // Actualizar el estado en la lista
       if (payload.data?._id) {
         const index = state.outboundsList.findIndex(
           (item) => item._id === payload.data._id,
@@ -198,7 +180,6 @@ export const outboundSlice = createSlice({
       }
     });
 
-    // OBTENER DETALLES DE SALIDA
     builder.addCase(getOutboundDetailsAction.pending, (state) => {
       state.detailsLoading = true;
       state.outboundDetails = null;
@@ -214,7 +195,6 @@ export const outboundSlice = createSlice({
       },
     );
 
-    // OBTENER ESTADÍSTICAS
     builder.addCase(getOutboundStatsAction.pending, (state) => {
       state.statsLoading = true;
       state.stats = null;
@@ -227,7 +207,6 @@ export const outboundSlice = createSlice({
       state.stats = payload.data;
     });
 
-    // CANCELAR SALIDA
     builder.addCase(cancelOutboundAction.pending, (state) => {
       state.cancellingOutbound = true;
       state.outboundCancelled = null;
@@ -238,7 +217,6 @@ export const outboundSlice = createSlice({
     builder.addCase(cancelOutboundAction.fulfilled, (state, { payload }) => {
       state.cancellingOutbound = false;
       state.outboundCancelled = payload.data;
-      // Actualizar el estado en la lista
       if (payload.data?._id) {
         const index = state.outboundsList.findIndex(
           (item) => item._id === payload.data._id,

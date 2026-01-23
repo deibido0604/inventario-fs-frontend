@@ -1,4 +1,3 @@
-// import { constants } from '@utils';
 
 const API_URL = "https://inventario-fs-backend.vercel.app/api-inventario-fs";
 // const API_URL =  "http://localhost:3000/api-inventario-fs";

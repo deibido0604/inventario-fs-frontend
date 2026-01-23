@@ -69,8 +69,6 @@ const OutboundForm = () => {
     outboundCreated,
   } = useSelector((state) => state.outbound);
 
-  /* ==================== CARGAR DATOS ==================== */
-  // Definir loadAvailableProducts ANTES de usarlo
   const loadAvailableProducts = useCallback(() => {
     if (storedData?.branch?._id) {
       dispatch(availableProductListAction({ branchId: storedData.branch._id }));
@@ -83,7 +81,6 @@ const OutboundForm = () => {
     }
   }, [dispatch, storedData]);
 
-  /* ==================== EFECTOS ==================== */
   useMountEffect({
     effect: () => {
       loadBranches();
@@ -97,7 +94,6 @@ const OutboundForm = () => {
     deps: [],
   });
 
-  // Efecto para mostrar mensaje de éxito
   useEffect(() => {
     if (outboundCreated) {
       message.success(
@@ -108,7 +104,6 @@ const OutboundForm = () => {
     }
   }, [outboundCreated, dispatch, loadAvailableProducts]);
 
-  // Efecto para setear sucursal de origen
   useEffect(() => {
     if (storedData?.branch?.name) {
       form.setFieldsValue({
@@ -117,7 +112,6 @@ const OutboundForm = () => {
     }
   }, [storedData, form]);
 
-  /* ==================== VERIFICAR DISPONIBILIDAD ==================== */
   const handleCheckAvailability = () => {
     const productId = form.getFieldValue("product");
     const quantity = form.getFieldValue("quantity");
@@ -136,7 +130,6 @@ const OutboundForm = () => {
     );
   };
 
-  /* ==================== AGREGAR AL GRID ==================== */
   const handleAddToGrid = () => {
     if (!availabilityResult || !availabilityResult.isAvailable) {
       message.warning("Primero verifique la disponibilidad");
@@ -152,7 +145,6 @@ const OutboundForm = () => {
       return;
     }
 
-    // Validación: misma sucursal destino
     if (branchDestinationGrid && branchDestinationGrid !== branchId) {
       const branch = branchesForUser.find(
         (b) => b.value === branchDestinationGrid
@@ -163,7 +155,6 @@ const OutboundForm = () => {
       return;
     }
 
-    // Crear filas desde los lotes
     const newRows = availabilityResult.batches.map((batch) => ({
       key: `${productId}-${batch.batchId}`,
       product_id: product.code,
@@ -187,7 +178,6 @@ const OutboundForm = () => {
     message.success("Producto agregado al grid");
   };
 
-  /* ==================== VERIFICAR LÍMITE DE SUCURSAL ==================== */
   const handleCheckBranchLimit = () => {
     const destinationBranchId = form.getFieldValue("branch_destination");
 
@@ -199,7 +189,6 @@ const OutboundForm = () => {
     dispatch(checkBranchLimitAction({ branchId: destinationBranchId }));
   };
 
-  /* ==================== REGISTRAR SALIDA ==================== */
   const handleSubmit = () => {
     if (gridData.length === 0) {
       message.warning("Debe agregar productos");
@@ -211,7 +200,6 @@ const OutboundForm = () => {
       return;
     }
 
-    // Calcular totales
     const totals = calculateTotals(gridData);
 
     confirm({
@@ -219,7 +207,6 @@ const OutboundForm = () => {
       icon: <ExclamationCircleOutlined />,
       content: `Total: ${totals.units} unidades - L ${totals.amount.toFixed(2)}`,
       onOk: () => {
-        // Agrupar productos por productId
         const itemsMap = new Map();
         gridData.forEach((item) => {
           if (!itemsMap.has(item.productId)) {
@@ -267,10 +254,8 @@ const OutboundForm = () => {
     form.resetFields(["branch_destination", "product", "quantity", "notes"]);
   };
 
-  /* ==================== TOTALES ==================== */
   const totals = calculateTotals(gridData);
 
-  /* ==================== COLUMNAS DEL GRID ==================== */
   const columns = [
     { title: "ID", dataIndex: "product_id", width: "10%" },
     { title: "Producto", dataIndex: "product", width: "20%" },
@@ -301,11 +286,9 @@ const OutboundForm = () => {
     },
   ];
 
-  /* ==================== RENDER ==================== */
   return (
     <>
       <Form layout="vertical" form={form}>
-        {/* ENCABEZADO */}
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item name="branch_origin" label="Sucursal de origen">
@@ -341,7 +324,6 @@ const OutboundForm = () => {
           </Col>
         </Row>
 
-        {/* PRODUCTO Y CANTIDAD */}
         <Row gutter={24}>
           <Col span={10}>
             <Form.Item
@@ -392,7 +374,6 @@ const OutboundForm = () => {
           </Col>
         </Row>
 
-        {/* BOTONES PRODUCTO */}
         <Row gutter={24} style={{ marginTop: 20 }}>
           <Col span={12} />
           <Col span={6}>
@@ -426,7 +407,6 @@ const OutboundForm = () => {
 
       <Divider />
 
-      {/* GRID */}
       <Table
         columns={columns}
         dataSource={gridData}
@@ -436,7 +416,6 @@ const OutboundForm = () => {
         locale={{ emptyText: "No hay productos agregados" }}
       />
 
-      {/* TOTALES */}
       <Row justify="end" style={{ marginTop: 16 }}>
         <Col>
           <Space direction="vertical" align="end" size="large">
@@ -459,7 +438,6 @@ const OutboundForm = () => {
 
       <Divider />
 
-      {/* BOTONES FINALES */}
       <Row justify="end" gutter={12}>
         <Col>
           <Button

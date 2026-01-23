@@ -1,8 +1,5 @@
 @use "sass:color";
 
-// ===========================================
-// VARIABLES DE COLORES (basadas en tu paleta)
-// ===========================================
 $primary-blue: #485bff;
 $secondary-blue: #2a4b87;
 $light-blue: #d0e7ff;
@@ -13,9 +10,6 @@ $dark-text: #000000;
 $light-bg: #f2aa5211;
 $white: #ffffff;
 
-// ===========================================
-// RESET Y ESTILOS GLOBALES
-// ===========================================
 html,
 body {
   margin: 0;
@@ -33,9 +27,6 @@ a {
   color: inherit;
 }
 
-// ===========================================
-// NAVBAR
-// ===========================================
 .navbar_custom {
   display: flex;
   justify-content: space-between;
@@ -50,9 +41,6 @@ a {
   padding: auto;
 }
 
-// ===========================================
-// PAGE HEADER Y BOTONES
-// ===========================================
 .page-title-button {
   display: flex;
   justify-content: space-between;
@@ -98,9 +86,6 @@ a {
   color: $white;
 }
 
-// ===========================================
-// TABLES
-// ===========================================
 .table-button-edit {
   color: $dark-text;
   background: transparent;
@@ -126,9 +111,6 @@ a {
   font-weight: 600;
 }
 
-// ===========================================
-// FORMULARIOS
-// ===========================================
 .footer-form-buttons {
   display: flex;
   justify-content: flex-end;
@@ -147,9 +129,6 @@ a {
   align-items: center;
 }
 
-// ===========================================
-// BOTONES ESPECIALES
-// ===========================================
 .button-product {
   height: 60px;
   font-size: 24px;
@@ -167,9 +146,6 @@ a {
   }
 }
 
-// ===========================================
-// SELECTS
-// ===========================================
 .small-select .ant-select-selector {
   font-size: 11px;
 }
@@ -190,9 +166,6 @@ a {
   box-shadow: 0 0 0 2px rgba($error-red, 0.08) !important;
 }
 
-// ===========================================
-// COLORS PARA TABLAS
-// ===========================================
 .color-1 {
   background-color: $light-bg;
 }
@@ -201,9 +174,6 @@ a {
   background-color: rgba($white, 0.7);
 }
 
-// ===========================================
-// MARGINS Y PADDINGS
-// ===========================================
 .mb-5 {
   margin-bottom: 5px !important;
 }
@@ -236,9 +206,6 @@ a {
   margin-top: 20px !important;
 }
 
-// ===========================================
-// ICONOS
-// ===========================================
 .bold_icon {
   svg {
     font-weight: bold;
@@ -250,9 +217,6 @@ a {
   }
 }
 
-// ===========================================
-// MAPA
-// ===========================================
 .map-container {
   height: 500px;
   width: 100%;
@@ -261,9 +225,6 @@ a {
   z-index: 1;
 }
 
-// ===========================================
-// ESTILOS LOGIN (AISLADOS)
-// ===========================================
 .login-wrapper {
   height: 100vh;
   width: 100vw;
@@ -297,9 +258,6 @@ a {
   }
 }
 
-// ===========================================
-// RESPONSIVE
-// ===========================================
 @media (max-width: 768px) {
   .page-title-button {
     flex-direction: column;

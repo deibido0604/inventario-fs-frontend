@@ -1,6 +1,3 @@
-//colores de uso general en las paletas
-
-//paletas
 export const palette = {
   primary: {
     main: '#0703F7',

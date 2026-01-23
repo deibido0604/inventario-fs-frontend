@@ -5,7 +5,6 @@ import { endpoints } from "@utils";
 
 const { callService } = useApi();
 
-// Listar productos disponibles para salida
 export const availableProductListAction = createAsyncThunk(
   "availableProduct/list",
   async (params, { rejectWithValue }) => {
@@ -16,7 +15,6 @@ export const availableProductListAction = createAsyncThunk(
   },
 );
 
-// Verificar disponibilidad de producto
 export const checkProductAvailabilityAction = createAsyncThunk(
   "outbound/checkAvailability",
   async (params, { rejectWithValue }) => {
@@ -27,7 +25,6 @@ export const checkProductAvailabilityAction = createAsyncThunk(
   },
 );
 
-// Verificar límite de sucursal
 export const checkBranchLimitAction = createAsyncThunk(
   "outbound/checkBranchLimit",
   async (params, { rejectWithValue }) => {
@@ -39,7 +36,6 @@ export const checkBranchLimitAction = createAsyncThunk(
   },
 );
 
-// Crear salida
 export const createOutboundAction = createAsyncThunk(
   "outbound/create",
   async (params, { rejectWithValue }) => {
@@ -50,7 +46,6 @@ export const createOutboundAction = createAsyncThunk(
   },
 );
 
-// Listar salidas
 export const listOutboundsAction = createAsyncThunk(
   "outbound/list",
   async (params, { rejectWithValue }) => {
@@ -61,7 +56,6 @@ export const listOutboundsAction = createAsyncThunk(
   },
 );
 
-// Recibir salida
 export const receiveOutboundAction = createAsyncThunk(
   "outbound/receive",
   async (params, { rejectWithValue }) => {
@@ -73,7 +67,6 @@ export const receiveOutboundAction = createAsyncThunk(
   },
 );
 
-// Obtener detalles de salida
 export const getOutboundDetailsAction = createAsyncThunk(
   "outbound/details",
   async (params, { rejectWithValue }) => {
@@ -85,7 +78,6 @@ export const getOutboundDetailsAction = createAsyncThunk(
   },
 );
 
-// Obtener estadísticas de salidas
 export const getOutboundStatsAction = createAsyncThunk(
   "outbound/stats",
   async (params, { rejectWithValue }) => {
@@ -96,7 +88,6 @@ export const getOutboundStatsAction = createAsyncThunk(
   },
 );
 
-// Cancelar salida
 export const cancelOutboundAction = createAsyncThunk(
   "outbound/cancel",
   async (params, { rejectWithValue }) => {

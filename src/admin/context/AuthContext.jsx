@@ -30,11 +30,9 @@ const AuthProvider = ({ children }) => {
     useLocalStorage();
   const navigate = useNavigate();
 
-  // STATES
   const [user, setUser] = useState(defaultProvider.user);
   const [initializing, setInitializing] = useState(true);
 
-  /* ================= INIT AUTH ================= */
   useEffect(() => {
     const initAuth = async () => {
       try {
@@ -45,7 +43,7 @@ const AuthProvider = ({ children }) => {
           try {
             userData = JSON.parse(storedUser);
           } catch (parseError) {
-            console.error("❌ Error parseando string:", parseError);
+            console.error("Error parseando string:", parseError);
             throw new Error("Datos corruptos");
           }
         }
@@ -81,7 +79,7 @@ const AuthProvider = ({ children }) => {
           }
         }
       } catch (error) {
-        console.error("💥 Error crítico en initAuth:", error);
+        console.error("Error crítico en initAuth:", error);
         clearStorage();
 
         const currentPath = window.location.pathname;
@@ -93,13 +91,11 @@ const AuthProvider = ({ children }) => {
       }
     };
 
-    // Pequeño delay
     setTimeout(() => {
       initAuth();
     }, 100);
   }, []);
 
-  /* ================= ABILITY ================= */
   const handleUpdateAbility = ({ permissions = [] }) => {
     const { can, rules } = new AbilityBuilder(ability);
     if (permissions && Array.isArray(permissions)) {
@@ -112,7 +108,6 @@ const AuthProvider = ({ children }) => {
     ability.update(rules);
   };
 
-  /* ================= HELPERS ================= */
   const handleSetUser = (data) => setUser(data);
 
   const clearStorage = () => {
@@ -134,7 +129,6 @@ const AuthProvider = ({ children }) => {
       });
     }
 
-    // Eliminar duplicados
     const seenIds = new Set();
     permissions = permissions.filter((permission) => {
       if (!permission || !permission._id) return false;
@@ -146,7 +140,6 @@ const AuthProvider = ({ children }) => {
     return { type, name, permissions };
   };
 
-  /* ================= LOGIN ================= */
   const handleLogin = (credentials) => {
     axios
       .callService({ url: endpoints.authUrl.login })
@@ -219,18 +212,17 @@ const AuthProvider = ({ children }) => {
         );
       });
   };
-  /* ================= LOGOUT ================= */
   const handleLogout = () => {
     axios
       .callService({ url: endpoints.authUrl.logout })
       .post()
       .then(async ({ data }) => {
         if (data) {
-          console.log("✅ Logout exitoso en servidor");
+          console.log(" Logout exitoso en servidor");
         }
       })
       .catch((error) => {
-        console.error("⚠️ Error en logout del servidor:", error);
+        console.error("Error en logout del servidor:", error);
       })
       .finally(() => {
         persistor.purge();

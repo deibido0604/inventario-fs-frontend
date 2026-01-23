@@ -43,7 +43,6 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { confirm } = Modal;
 
-// Estado inicial para filtros
 const initialFilters = {
   startDate: null,
   endDate: null,
@@ -56,18 +55,15 @@ const OutboundList = () => {
   const dispatch = useDispatch();
   const { getItemWithDecryptionDash } = useLocalStorage();
   
-  // Obtener storedData UNA VEZ al inicio usando useRef
   const storedDataRef = useRef(null);
   if (storedDataRef.current === null) {
     storedDataRef.current = getItemWithDecryptionDash("data");
   }
   const storedData = storedDataRef.current;
 
-  // Estados locales
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [showFilters, setShowFilters] = useState(true);
 
-  // Obtener estados de Redux con valores por defecto
   const {
     outboundsList = [],
     outboundsLoading = false,
@@ -80,16 +76,12 @@ const OutboundList = () => {
 
   const { branchesForUser = [] } = useSelector((state) => state.branch || {});
 
-  // ========== FUNCIONES DE CARGA (DECLARADAS PRIMERO) ==========
-
-  // Cargar sucursales para filtros
   const loadBranches = useCallback(() => {
     if (storedData?.user?.id) {
       dispatch(branchListForUserAction({ userId: storedData.user.id }));
     }
   }, [dispatch, storedData]);
 
-  // Cargar salidas
   const loadOutbounds = useCallback(() => {
     if (!storedData?.user?.id) return;
 
@@ -98,7 +90,6 @@ const OutboundList = () => {
       ...filters,
     };
 
-    // Formatear fechas para el backend
     if (filters.startDate && filters.endDate) {
       params.startDate = moment(filters.startDate).format("YYYY-MM-DD");
       params.endDate = moment(filters.endDate).format("YYYY-MM-DD");
@@ -107,7 +98,6 @@ const OutboundList = () => {
     dispatch(listOutboundsAction(params));
   }, [dispatch, storedData, filters]);
 
-  // Cargar estadísticas
   const loadStats = useCallback(() => {
     if (!storedData?.user?.id) return;
 
@@ -115,7 +105,6 @@ const OutboundList = () => {
       user: storedData.user.id,
     };
 
-    // Agregar fechas si existen
     if (filters.startDate && filters.endDate) {
       params.startDate = moment(filters.startDate).format("YYYY-MM-DD");
       params.endDate = moment(filters.endDate).format("YYYY-MM-DD");
@@ -124,9 +113,6 @@ const OutboundList = () => {
     dispatch(getOutboundStatsAction(params));
   }, [dispatch, storedData, filters]);
 
-  // ========== USE EFFECTS ==========
-
-  // Cargar datos iniciales SOLO una vez al montar
   useEffect(() => {
     if (storedData?.user?.id) {
       loadBranches();
@@ -137,22 +123,17 @@ const OutboundList = () => {
     return () => {
       dispatch(clearStats());
     };
-  }, []); // <-- Array de dependencias VACÍO
+  }, []);
 
-  // ========== MANEJADORES DE FILTROS ==========
-
-  // Manejar cambios en filtros
   const handleFilterChange = (key, value) => {
     dispatch(setFilters({ [key]: value }));
   };
 
-  // Aplicar filtros
   const handleApplyFilters = () => {
     loadOutbounds();
     loadStats();
   };
 
-  // Limpiar filtros
   const handleClearFilters = () => {
     dispatch(clearFilters());
     setSelectedRowKeys([]);
@@ -162,9 +143,6 @@ const OutboundList = () => {
     }, 100);
   };
 
-  // ========== MANEJADORES DE ACCIONES ==========
-
-  // Recibir salida
   const handleReceiveOutbound = (record) => {
     if (!storedData?.user?.id) return;
 
@@ -181,7 +159,6 @@ const OutboundList = () => {
           .unwrap()
           .then(() => {
             message.success("Salida recibida exitosamente");
-            // Recargar solo la lista, no estadísticas
             loadOutbounds();
             dispatch(clearOutboundReceived());
           })
@@ -192,7 +169,6 @@ const OutboundList = () => {
     });
   };
 
-  // Cancelar salida
   const handleCancelOutbound = (record) => {
     if (!storedData?.user?.id) return;
 
@@ -209,7 +185,6 @@ const OutboundList = () => {
           .unwrap()
           .then(() => {
             message.success("Salida cancelada exitosamente");
-            // Recargar solo la lista, no estadísticas
             loadOutbounds();
             dispatch(clearOutboundCancelled());
           })
@@ -220,13 +195,9 @@ const OutboundList = () => {
     });
   };
 
-  // ========== FUNCIONES DE VERIFICACIÓN ==========
-
-  // Verificar si el usuario puede recibir esta salida
   const canReceiveOutbound = (record) => {
     if (record.status !== "Enviada a sucursal") return false;
 
-    // Verificar si el usuario es manager de la sucursal destino
     const userBranch = branchesForUser.find(
       (b) => b.value === record.destination_branch?._id
     );
@@ -234,19 +205,15 @@ const OutboundList = () => {
     return !!userBranch;
   };
 
-  // Verificar si el usuario puede cancelar esta salida
   const canCancelOutbound = (record) => {
     if (record.status !== "Enviada a sucursal") return false;
 
-    // Verificar si el usuario es manager de la sucursal origen
     const userBranch = branchesForUser.find(
       (b) => b.value === record.source_branch?._id
     );
 
     return !!userBranch;
   };
-
-  // ========== COLUMNAS DE LA TABLA ==========
 
   const columns = [
     {
@@ -392,9 +359,6 @@ const OutboundList = () => {
     },
   ];
 
-  // ========== COMPONENTES DE INTERFAZ ==========
-
-  // PANEL DE FILTROS
   const filterPanel = (
     <Card
       size="small"
@@ -501,7 +465,6 @@ const OutboundList = () => {
     </Card>
   );
 
-  // PANEL DE ESTADÍSTICAS
   const statsPanel = stats && (
     <Card size="small" style={{ marginBottom: 16 }} loading={statsLoading}>
       <Row gutter={[16, 16]}>
@@ -529,7 +492,6 @@ const OutboundList = () => {
           />
         </Col>
 
-        {/* Estadísticas por estado */}
         {stats.byStatus?.map((statusStat) => (
           <Col xs={24} sm={8} key={statusStat._id}>
             <Card size="small">
@@ -544,8 +506,6 @@ const OutboundList = () => {
       </Row>
     </Card>
   );
-
-  // ========== RENDER PRINCIPAL ==========
 
   return (
     <div style={{ padding: 24 }}>

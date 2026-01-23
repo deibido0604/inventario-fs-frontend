@@ -11,7 +11,6 @@ const useAxios = (dispatch) => {
     const data = getItemWithDecryption('data');
     if (data) {
       const { access_token } = JSON.parse(data);
-      console.log(access_token);
       config.headers.Authorization = `Bearer ${access_token}`;
     }
 

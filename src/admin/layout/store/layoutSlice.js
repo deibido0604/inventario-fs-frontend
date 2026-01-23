@@ -28,5 +28,4 @@ export const layoutSlice = createSlice({
   },
 });
 
-// Action creators are generated for each case reducer function
 export const { openNotification, closeNotification } = layoutSlice.actions;

@@ -5,7 +5,6 @@ export const Actions = {
 };
 
 export const Subjects = {
-  //SCREENS
   MAIN: "main",
   DASHBOARD: "dashboard",
   PRODUCTS: "products",
